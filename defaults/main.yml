@@ -1,2 +1,6 @@
 ---
-# defaults file for ac-gulp
+NODE_LOCAL_USER: node # who node runs as
+NODE_BASE:  # path to install to - defaults to root
+NODE_BUILD_DIR: /node # path to do work in during build-time
+NODE_RPM_URL: https://rpm.nodesource.com/pub_5.x/el/7/x86_64/nodejs-5.9.1-1nodesource.el7.centos.x86_64.rpm
+DUMB_INIT_URL: https://github.com/Yelp/dumb-init/releases/download/v1.0.2/dumb-init_1.0.2_amd64

@@ -1,0 +1,14 @@
+gulp:
+  image: centos:7
+  user: 'node'
+  command: /bin/false
+  dev_overrides:
+    working_dir: '/node'
+    command: ['/usr/bin/dumb-init', '/node_modules/.bin/gulp']
+    ports:
+      - "80:8080"
+    volumes:
+      - "$PWD:/node"
+  options:
+    kube:
+      state: absent

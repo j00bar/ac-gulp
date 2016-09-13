@@ -1,2 +1,30 @@
 ---
-# tasks file for ac-gulp
+- name: Install dumb init
+  get_url: dest=/usr/bin/dumb-init url="{{ DUMB_INIT_URL }}" mode=0775 validate_certs=no
+- name: Make node user
+  user: name="{{ NODE_LOCAL_USER }}" state=present createhome=yes home=/node
+- name: Make sure node owns its working dir
+  file: name="{{ NODE_BUILD_DIR }}/" state=directory owner="{{ NODE_LOCAL_USER }}" recurse=true
+- name: Make node_modules directory
+  file: name="{{ NODE_BASE }}/node_modules" state=directory owner="{{ NODE_LOCAL_USER }}"
+- name: Install nodejs
+  yum: name="{{ NODE_RPM_URL }}"
+- name: Copy source
+  copy: src="{{ lookup('pipe','dirname `pwd`') }}/" dest="{{ NODE_BUILD_DIR }}/" owner="{{ NODE_LOCAL_USER }}"
+  remote_user: node
+- name: Symlink package.json
+  file: name="{{ NODE_BASE }}/package.json" src="{{ NODE_BUILD_DIR }}/package.json" owner="{{ NODE_LOCAL_USER }}" state=link
+- name: Install node deps
+  command: npm install chdir="{{ NODE_BASE }}/"
+  remote_user: "{{ NODE_LOCAL_USER }}"
+- name: Build static assets
+  command: "{{ NODE_BASE }}/node_modules/.bin/gulp" build chdir="{{ NODE_BUILD_DIR }}/"
+  environment:
+    NODE_PATH: "{{ NODE_BASE }}/"
+  remote_user: "{{ NODE_LOCAL_USER }}"
+- name: Itemize built assets
+  find: paths="{{ NODE_BUILD_DIR }}/dist" recurse=yes
+  register: gulp_assets
+- name: Fetch built assets
+  fetch: src="{{ item.path }}" dest=/tmp/gulp-build
+  with_items: gulp_assets.files
