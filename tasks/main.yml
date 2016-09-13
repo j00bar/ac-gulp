@@ -18,7 +18,9 @@
   command: npm install chdir="{{ NODE_BASE }}/"
   remote_user: "{{ NODE_LOCAL_USER }}"
 - name: Build static assets
-  command: "{{ NODE_BASE }}/node_modules/.bin/gulp build" chdir="{{ NODE_BUILD_DIR }}/"
+  command: "{{ NODE_BASE }}/node_modules/.bin/gulp build"
+  args:
+    chdir: "{{ NODE_BUILD_DIR }}/"
   environment:
     NODE_PATH: "{{ NODE_BASE }}/"
   remote_user: "{{ NODE_LOCAL_USER }}"
