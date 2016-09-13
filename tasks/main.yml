@@ -15,7 +15,7 @@
 - name: Symlink package.json
   file: name="{{ NODE_BASE }}/package.json" src="{{ NODE_BUILD_DIR }}/package.json" owner="{{ NODE_LOCAL_USER }}" state=link
 - name: Install node deps
-  command: "npm install" chdir="{{ NODE_BASE }}/"
+  command: npm install chdir="{{ NODE_BASE }}/"
   remote_user: "{{ NODE_LOCAL_USER }}"
 - name: Build static assets
   command: "{{ NODE_BASE }}/node_modules/.bin/gulp build" chdir="{{ NODE_BUILD_DIR }}/"
